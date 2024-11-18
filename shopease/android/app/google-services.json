@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "849937788806",
+    "project_id": "todo-app-401f8",
+    "storage_bucket": "todo-app-401f8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849937788806:android:7c5dcbf682c36cba068607",
+        "android_client_info": {
+          "package_name": "com.example.shopease"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849937788806-bcpetun4nkml4n0qhnds3jjgm07mgt5a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk81f4PXWPPoFqtE6irDYsyHrjMCyM1QQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849937788806-bcpetun4nkml4n0qhnds3jjgm07mgt5a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
