@@ -17,23 +17,42 @@ Future<void> main() async{
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  static final ValueNotifier<ThemeMode> notifier = ValueNotifier(ThemeMode.light);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'ShopEase',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
-      initialRoute: "/",
-      routes: {
-        "/": (context)=> const SplashScreen(),
-        "/home": (context)=> const HomeScreen(),
-        "/login": (context)=> const Login(),
-        "/signup": (context)=> const Signup(),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: notifier,
+      builder: (context, mode, child) {
+        return MaterialApp(
+
+          theme: ThemeData(
+              brightness: Brightness.light,
+              primarySwatch: Colors.blue,
+              colorScheme: const ColorScheme.light().copyWith(
+                  primary: Colors.blue.shade200),
+              primaryColor: Colors.white,
+              scaffoldBackgroundColor: Colors.white
+          ),
+          darkTheme: ThemeData(
+              brightness: Brightness.dark,
+              primarySwatch: Colors.blue,
+              colorScheme: const ColorScheme.dark().copyWith(primary: Colors.blueGrey),
+              primaryColor: Colors.black,
+              scaffoldBackgroundColor: Colors.black12
+          ),
+          themeMode: mode,
+          debugShowCheckedModeBanner: false,
+          initialRoute: "/",
+          routes: {
+            "/": (context) => const SplashScreen(),
+            "/home": (context) => const HomeScreen(),
+            "/login": (context) => const Login(),
+            "/signup": (context) => const Signup(),
+          },
+        );
       },
+
     );
   }
 }
-
