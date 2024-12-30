@@ -33,7 +33,7 @@ class _LoginState extends State<Login> {
       setState(() {
         isLoading=false;
       });
-      Navigator.pushReplacementNamed(context, "/home");
+      Navigator.pushReplacementNamed(context, "/main");
     }).onError((error,stackTrace){
       setState(() {
         isLoading=false;

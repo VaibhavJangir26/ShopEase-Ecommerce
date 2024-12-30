@@ -8,10 +8,18 @@ class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
 
   @override
-  State<MyDrawer> createState() => _MyDrawerState();
+  State<MyDrawer> createState() => MyDrawerState();
 }
 
-class _MyDrawerState extends State<MyDrawer> {
+class MyDrawerState extends State<MyDrawer> {
+
+  bool isAppLockEnabled=false;
+
+  @override
+  void initState() {
+    super.initState();
+    getSavedUserInfo();
+  }
 
   Future<Map<String,String?>> getSavedUserInfo()async{
    final prefs=await SharedPreferences.getInstance();
@@ -23,9 +31,12 @@ class _MyDrawerState extends State<MyDrawer> {
 
   final auth=FirebaseAuth.instance;
 
+
+
   @override
   Widget build(BuildContext context) {
     final width=MediaQuery.of(context).size.width;
+    final height=MediaQuery.of(context).size.height;
     return Drawer(
       width: width/1.3,
 
@@ -41,21 +52,38 @@ class _MyDrawerState extends State<MyDrawer> {
           else{
             return Column(
               children: [
+
+
                 UserAccountsDrawerHeader(
                   currentAccountPicture: const CircleAvatar(
                       backgroundImage: AssetImage("assets/images/pic.jpg",)),
                   accountName: Text(snapshot.data!["savedName"]??"Not Saved"),
                   accountEmail:Text(snapshot.data!["savedEmail"]??"Not Saved\n ${snapshot.data!["savedPass"]??"Not Saved"}"),
                 ),
+
+
                 ListTile(
                   leading: MyApp.notifier.value == ThemeMode.light?const Icon(Icons.sunny): const Icon(Icons.dark_mode),
                   title: MyApp.notifier.value == ThemeMode.light?const Text("Light Theme"): const Text("Dark Theme"),
                   onTap: (){
-                    setState(() {
                       MyApp.notifier.value = MyApp.notifier.value == ThemeMode.light ? ThemeMode.dark: ThemeMode.light;
-                    });
+                      Navigator.pop(context);
                   },
                 ),
+
+                ListTile(
+                  leading: const Icon(Icons.lock),
+                  title: const Text("AppLock"),
+                  trailing:  Switch(
+                      value: isAppLockEnabled,
+                      onChanged: (value){
+                        setState(() {
+                          isAppLockEnabled=value;
+                        });
+                      },
+                    ),
+                  ),
+
                 ListTile(
                   leading: const Icon(Icons.logout),
                   title: const Text("Logout"),
@@ -67,6 +95,7 @@ class _MyDrawerState extends State<MyDrawer> {
                     });
                   },
                 ),
+
               ],
             );
           }

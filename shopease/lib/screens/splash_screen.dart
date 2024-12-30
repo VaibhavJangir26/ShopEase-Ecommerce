@@ -17,21 +17,23 @@ class SplashScreenState extends State<SplashScreen> {
     whichScreen();
   }
 
+  void whichScreen() {
+    final auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
 
-  whichScreen(){
-    final auth=FirebaseAuth.instance;
-    User? user=auth.currentUser;
-    if(user!=null){
-      Navigator.pushReplacementNamed(context, "/home");
-    }
-    Timer(const Duration(seconds: 4),(){
-      Navigator.pushReplacementNamed(context, "/login");
+    Timer(const Duration(seconds: 4), () {
+      if (user != null) {
+        Navigator.pushReplacementNamed(context, "/main");
+      } else {
+        Navigator.pushReplacementNamed(context, "/login");
+      }
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    final width=MediaQuery.of(context).size.width;
-    final height=MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -45,18 +47,25 @@ class SplashScreenState extends State<SplashScreen> {
                 gradient: LinearGradient(colors: [
                   Color(0xfffff1eb),
                   Color(0xfface0f9),
-                ])
+                ]),
               ),
             ),
             Container(
-              width: width*.8,
-              height: height*.2,
+              width: width * .8,
+              height: height * .2,
               alignment: Alignment.center,
               padding: const EdgeInsets.all(8),
-              child: Text("ShopEase",style: GoogleFonts.italiana(fontSize: 45,fontWeight: FontWeight.bold,color: Colors.blue.shade400)),
+              child: Text(
+                "ShopEase",
+                style: GoogleFonts.italiana(
+                  fontSize: 45,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade400,
+                ),
+              ),
             ),
-          ]
-        )
+          ],
+        ),
       ),
     );
   }

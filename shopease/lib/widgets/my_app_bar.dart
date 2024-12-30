@@ -10,14 +10,14 @@ class MyAppBar extends StatefulWidget {
 
 class _MyAppBarState extends State<MyAppBar> {
 
-  // final ValueNotifier<ThemeMode> _notifier = ValueNotifier(ThemeMode.light);
 
 
   @override
   Widget build(BuildContext context) {
     
     return AppBar(
-      elevation: 10,
+      elevation: 5,
+
       title: Text(widget.title),
       centerTitle: true,
       leading: IconButton(onPressed: (){
