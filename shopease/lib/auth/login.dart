@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shopease/methods/toast_message.dart';
 
 import '../main.dart';
+import '../methods_and_ui/toast_message.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -23,8 +23,12 @@ class _LoginState extends State<Login> {
       isPassVisible=!isPassVisible;
     });
   }
+
   bool isLoading=false;
+
   final auth=FirebaseAuth.instance;
+
+
   Future<void> login(String email,String password) async{
     setState(() {
       isLoading=true;
@@ -41,6 +45,7 @@ class _LoginState extends State<Login> {
       ToastMessage().showToastMsg(error.toString());
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +71,7 @@ class _LoginState extends State<Login> {
                   ]),
                 ),
               ),
+
               SingleChildScrollView(
                 child: Container(
                   width: width*.85,
@@ -75,7 +81,9 @@ class _LoginState extends State<Login> {
                     key: _formKey,
                     child: Column(
                       children: [
+
                         const Text("Welcome Back!",style: TextStyle(fontSize: 33,fontWeight: FontWeight.bold),),
+
                         TextFormField(
                           enableSuggestions: true,
                           enableIMEPersonalizedLearning: true,
@@ -99,7 +107,9 @@ class _LoginState extends State<Login> {
                               )
                           ),
                         ),
+
                         SizedBox(height: height*.02,),
+
                         TextFormField(
                           controller: passwordController,
                           obscureText: isPassVisible?false:true,
@@ -123,81 +133,19 @@ class _LoginState extends State<Login> {
                               )
                           ),
                         ),
-                        Container(
-                          width: width,
-                          height: height*.04,
-                          alignment: Alignment.centerRight,
-                          child: const Text("forgot password?",style: TextStyle(color: Colors.blue),),
-                        ),
-                        Container(
-                          width: width*.6,
-                          height: height*.095,
-                          padding: const EdgeInsets.all(8),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
-                            ),
-                            onPressed: (){
-                              setState(() {
-                                setState(() {
-                                  isLoading=false;
-                                });
-                                if(_formKey.currentState!.validate()){
-                                  login(emailController.text.toString(), passwordController.text.toString());
-                                }
-                              });
-                            },
-                            child: isLoading?const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(strokeWidth: 2.5,)):const Text("Login",style: TextStyle(fontSize: 15),),
-                          ),
-                        ),
-                        Container(
-                          width: width,
-                          height: height*.04,
-                          alignment: Alignment.center,
-                          child: const Text("-or Continue with-"),
-                        ),
-                        Container(
-                          width: width,
-                          height: height*.08,
-                          padding: const EdgeInsets.all(4),
-                          alignment: Alignment.center,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const CircleAvatar(
-                                foregroundImage: AssetImage("assets/images/googlelogo.png"),
-                                foregroundColor: Colors.grey,
-                              ),
-                              SizedBox(width: width*.02,),
-                              const CircleAvatar(
-                                foregroundColor: Colors.grey,
-                                foregroundImage: AssetImage("assets/images/facebooklogo.png"),
-                              ),
-                            ],
-                          ),
 
-                        ),
+                        forgotPassword(height, width),
+
+                        loginButton(height, width),
+
+                        continueWith(height, width),
+
+                        loginOptions(height, width),
+
                         SizedBox(height: height*.005,),
-                        Container(
-                          width: width,
-                          height: height*.05,
-                          padding: const EdgeInsets.all(4),
-                          alignment: Alignment.center,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text("Create an Account?"),
-                              SizedBox(width: width*.025,),
-                              InkWell(
-                                onTap: ()=>Navigator.pushNamed(context, "/signup"),
-                                  child: const Text("Sign Up",style: TextStyle(color: Colors.pink),)),
-                            ],
-                          ),
 
-                        ),
+                        newRegister(height, width),
+
                       ],
                     ),
                   ),
@@ -208,4 +156,95 @@ class _LoginState extends State<Login> {
       ),
     );
   }
+
+  Widget forgotPassword(double height,double width){
+    return Container(
+      width: width,
+      height: height*.04,
+      alignment: Alignment.centerRight,
+      child: const Text("forgot password?",style: TextStyle(color: Colors.blue),),
+    );
+  }
+
+  Widget loginButton(double height,double width){
+    return Container(
+      width: width*.6,
+      height: height*.095,
+      padding: const EdgeInsets.all(8),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
+        ),
+        onPressed: (){
+          setState(() {
+            setState(() {
+              isLoading=false;
+            });
+            if(_formKey.currentState!.validate()){
+              login(emailController.text.toString(), passwordController.text.toString());
+            }
+          });
+        },
+        child: isLoading?const SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(strokeWidth: 2.5,)):const Text("Login",style: TextStyle(fontSize: 15),),
+      ),
+    );
+  }
+
+  Widget continueWith(double height,double width){
+    return Container(
+      width: width,
+      height: height*.04,
+      alignment: Alignment.center,
+      child: const Text("-or Continue with-"),
+    );
+  }
+
+  Widget loginOptions(double height,double width){
+    return Container(
+      width: width,
+      height: height*.08,
+      padding: const EdgeInsets.all(4),
+      alignment: Alignment.center,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const CircleAvatar(
+            foregroundImage: AssetImage("assets/images/googlelogo.png"),
+            foregroundColor: Colors.grey,
+          ),
+          SizedBox(width: width*.02,),
+          const CircleAvatar(
+            foregroundColor: Colors.grey,
+            foregroundImage: AssetImage("assets/images/facebooklogo.png"),
+          ),
+        ],
+      ),
+
+    );
+  }
+
+  Widget newRegister(double height,double width){
+    return Container(
+      width: width,
+      height: height*.05,
+      padding: const EdgeInsets.all(4),
+      alignment: Alignment.center,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text("Create an Account?"),
+          SizedBox(width: width*.025,),
+          InkWell(
+              onTap: ()=>Navigator.pushNamed(context, "/signup"),
+              child: const Text("Sign Up",style: TextStyle(color: Colors.pink),)),
+        ],
+      ),
+
+    );
+  }
+
+
 }

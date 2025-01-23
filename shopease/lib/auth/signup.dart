@@ -1,12 +1,13 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopease/main.dart';
 
-import '../methods/toast_message.dart';
+import '../methods_and_ui/toast_message.dart';
+
+
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -16,14 +17,21 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController cPasswordController = TextEditingController();
   TextEditingController nameController = TextEditingController();
+
+
   bool isPassVisible = false;
   bool isCPassVisible = false;
   bool isChecked = false;
+
+
   final _formKey = GlobalKey<FormState>();
+
+
   void showPassword() {
     setState(() {
       isPassVisible = !isPassVisible;
@@ -37,26 +45,19 @@ class _SignupState extends State<Signup> {
   }
 
   bool isLoading = false;
+
+
   final auth = FirebaseAuth.instance;
+
   Future<void> signUp(String email, String password) async {
     setState(() {
       isLoading = true;
     });
-    try {
-      await auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      if (!mounted) return; // Ensure widget is still in the widget tree
-      setState(() {
-        isLoading = false;
-      });
+    auth.createUserWithEmailAndPassword(email: email, password: password).then((value){
       Navigator.pushReplacementNamed(context, "/main");
-    } catch (error) {
-      if (!mounted) return; // Ensure widget is still in the widget tree
-      setState(() {
-        isLoading = false;
-      });
+    }).catchError((error,stackTrace){
       ToastMessage().showToastMsg(error.toString());
-    }
+    });
   }
 
   Future<void> saveUserInfo(String email, String password, String name) async {
@@ -70,28 +71,29 @@ class _SignupState extends State<Signup> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
           alignment: Alignment.center,
           children: [
+
             Container(
               width: width,
               height: height,
               decoration: BoxDecoration(
-                gradient: MyApp.notifier.value == ThemeMode.light
-                    ? const LinearGradient(colors: [
+                gradient: MyApp.notifier.value == ThemeMode.light ? const LinearGradient(colors: [
                         // this is for light theme
                         Color(0xfffff1eb),
                         Color(0xfface0f9),
-                      ])
-                    : const LinearGradient(colors: [
+                      ]):const LinearGradient(colors: [
                         // this is for dark theme
                         Color(0xff09203f),
                         Color(0xff537895),
                       ]),
               ),
             ),
+
             SingleChildScrollView(
               child: Container(
                 width: width * .85,
@@ -101,11 +103,9 @@ class _SignupState extends State<Signup> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      const Text(
-                        "Create an account",
-                        style: TextStyle(
-                            fontSize: 28, fontWeight: FontWeight.bold),
-                      ),
+
+                      const Text("Create an account", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),
+
                       TextFormField(
                         controller: nameController,
                         keyboardType: TextInputType.name,
@@ -118,14 +118,10 @@ class _SignupState extends State<Signup> {
                         decoration: InputDecoration(
                             hintText: "Full Name",
                             prefixIcon: const Icon(Icons.person),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide:
-                                    const BorderSide(color: Colors.grey))),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(color: Colors.grey))),
                       ),
-                      SizedBox(
-                        height: height * .005,
-                      ),
+
                       TextFormField(
                         enableSuggestions: true,
                         enableIMEPersonalizedLearning: true,
@@ -147,12 +143,10 @@ class _SignupState extends State<Signup> {
                             ),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide:
-                                    const BorderSide(color: Colors.grey))),
+                                borderSide: const BorderSide(color: Colors.grey))
+                        ),
                       ),
-                      SizedBox(
-                        height: height * .005,
-                      ),
+
                       TextFormField(
                         controller: passwordController,
                         obscureText: isPassVisible ? false : true,
@@ -170,127 +164,27 @@ class _SignupState extends State<Signup> {
                             ),
                             suffixIcon: IconButton(
                               onPressed: showPassword,
-                              icon: isPassVisible
-                                  ? const Icon(Icons.remove_red_eye)
-                                  : const Icon(CupertinoIcons.eye_slash_fill),
+                              icon: isPassVisible? const Icon(Icons.remove_red_eye) : const Icon(CupertinoIcons.eye_slash_fill),
                             ),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide:
-                                    const BorderSide(color: Colors.grey))),
+                                borderSide: const BorderSide(color: Colors.grey))),
                       ),
-                      CheckboxListTile(
-                          value: isChecked,
-                          activeColor: Colors.blue,
-                          controlAffinity: ListTileControlAffinity.leading,
-                          title: const Text(
-                            "By clicking this you accept our T&Cs. and Privacy Policy.",
-                            style: TextStyle(fontSize: 11),
-                          ),
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked = value ?? false;
-                            });
-                          }),
-                      Container(
-                        width: width * .6,
-                        height: height * .095,
-                        padding: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10))),
-                          onPressed: () {
-                            isLoading = false;
-                            if (!isChecked) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                backgroundColor: Colors.blue.shade100,
-                                content: Text(
-                                  "Please accept the T&Cs and Privacy Policy",
-                                  style: TextStyle(color: Colors.pink.shade300),
-                                ),
-                                duration: const Duration(seconds: 1),
-                              ));
-                            }
-                            if (_formKey.currentState!.validate() &&
-                                isChecked) {
-                              signUp(emailController.text.toString(),
-                                  passwordController.text.toString());
-                              saveUserInfo(
-                                  emailController.text.toString(),
-                                  passwordController.text.toString(),
-                                  nameController.text.toString());
-                            }
-                          },
-                          child: isLoading
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ))
-                              : const Text(
-                                  "Create Account",
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                        ),
-                      ),
-                      Container(
-                        width: width,
-                        height: height * .04,
-                        alignment: Alignment.center,
-                        child: const Text("--or Continue with--"),
-                      ),
-                      Container(
-                        width: width,
-                        height: height * .08,
-                        padding: const EdgeInsets.all(4),
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const CircleAvatar(
-                              foregroundColor: Colors.grey,
-                              foregroundImage:
-                                  AssetImage("assets/images/googlelogo.png"),
-                            ),
-                            SizedBox(
-                              width: width * .02,
-                            ),
-                            const CircleAvatar(
-                              foregroundColor: Colors.grey,
-                              foregroundImage:
-                                  AssetImage("assets/images/facebooklogo.png"),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: height * .005,
-                      ),
-                      Container(
-                        width: width,
-                        height: height * .05,
-                        padding: const EdgeInsets.all(4),
-                        alignment: Alignment.center,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text("Create an Account?"),
-                            SizedBox(
-                              width: width * .025,
-                            ),
-                            InkWell(
-                                onTap: () =>
-                                    Navigator.pushNamed(context, "/login"),
-                                child: const Text(
-                                  "Login",
-                                  style: TextStyle(color: Colors.pink),
-                                )),
-                          ],
-                        ),
-                      ),
+
+
+                      checkBoxList(height, width),
+
+                      signupButton(height, width),
+
+                      continueWith(height, width),
+
+                      otherSignupOptions(height, width),
+
+                      SizedBox(height: height * .005,),
+
+                      moveToLoginScreen(height, width),
+
+
                     ],
                   ),
                 ),
@@ -301,4 +195,114 @@ class _SignupState extends State<Signup> {
       ),
     );
   }
+
+  Widget signupButton(double height,double width){
+    return Container(
+      width: width * .6,
+      height: height * .095,
+      padding: const EdgeInsets.all(8),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10))
+        ),
+        onPressed: () {
+          isLoading = false;
+
+          if (!isChecked) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              backgroundColor: Colors.blue.shade100,
+              content: Text("Please accept the T&Cs and Privacy Policy", style: TextStyle(color: Colors.pink.shade300),),
+              duration: const Duration(seconds: 1),
+            ));
+          }
+
+          if (_formKey.currentState!.validate() && isChecked) {
+            signUp(emailController.text.toString(), passwordController.text.toString());
+            saveUserInfo(emailController.text.toString(), passwordController.text.toString(), nameController.text.toString());
+          }
+        },
+
+        child: isLoading?const SizedBox(
+            height: 20,
+            width: 20,
+            child: CircularProgressIndicator(strokeWidth: 2,)): const Text("Create Account", style: TextStyle(fontSize: 15),),
+      ),
+
+    );
+  }
+
+  Widget checkBoxList(double height,double width){
+    return CheckboxListTile(
+        value: isChecked,
+        activeColor: Colors.blue,
+        controlAffinity: ListTileControlAffinity.leading,
+        title: const Text("By clicking this you accept our T&Cs. and Privacy Policy.",
+          style: TextStyle(fontSize: 11),
+        ),
+        onChanged: (bool? value) {
+          setState(() {
+            isChecked = value ?? false;
+          });
+        });
+  }
+
+
+  Widget continueWith(double height,double width){
+    return Container(
+      width: width,
+      height: height * .04,
+      alignment: Alignment.center,
+      child: const Text("--or Continue with--"),
+    );
+  }
+
+
+  Widget otherSignupOptions(double height,double width){
+    return Container(
+      width: width,
+      height: height * .08,
+      padding: const EdgeInsets.all(4),
+      alignment: Alignment.center,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const CircleAvatar(
+            foregroundColor: Colors.grey,
+            foregroundImage: AssetImage("assets/images/googlelogo.png"),
+          ),
+          SizedBox(width: width * .02,),
+          const CircleAvatar(
+            foregroundColor: Colors.grey,
+            foregroundImage: AssetImage("assets/images/facebooklogo.png"),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  Widget moveToLoginScreen(double height,double width){
+    return  Container(
+      width: width,
+      height: height * .05,
+      padding: const EdgeInsets.all(4),
+      alignment: Alignment.center,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text("Create an Account?"),
+          SizedBox(width: width * .025,),
+          InkWell(onTap: () => Navigator.pushNamed(context, "/login"),
+              child: const Text("Login",
+                style: TextStyle(color: Colors.pink),
+              )
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
 }

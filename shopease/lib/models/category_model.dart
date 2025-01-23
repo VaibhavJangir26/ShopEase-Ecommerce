@@ -10,6 +10,7 @@ class CategoryModal {
 
   CategoryModal({
     required this.id,
+    // productId
     required this.title,
     required this.price,
     required this.description,
@@ -18,7 +19,7 @@ class CategoryModal {
     required this.rating,
   });
 
-  // Factory constructor to create a CategoryModal from JSON
+  // Factory constructor
   factory CategoryModal.fromJson(Map<String, dynamic> json) {
     return CategoryModal(
       id: json['id'],
@@ -31,7 +32,7 @@ class CategoryModal {
     );
   }
 
-  // Method to convert CategoryModal to JSON
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -54,7 +55,7 @@ class Rating {
     required this.count,
   });
 
-  // Factory constructor to create a Rating from JSON
+
   factory Rating.fromJson(Map<String, dynamic> json) {
     return Rating(
       rate: json['rate'].toDouble(),
@@ -62,11 +63,13 @@ class Rating {
     );
   }
 
-  // Method to convert Rating to JSON
+
   Map<String, dynamic> toJson() {
     return {
       'rate': rate,
       'count': count,
     };
   }
+
+
 }

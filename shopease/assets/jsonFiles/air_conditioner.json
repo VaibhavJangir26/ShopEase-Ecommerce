@@ -1,0 +1,93 @@
+[
+  {
+    "id": 1,
+    "brand": "LG",
+    "description": "Energy-efficient split AC with fast cooling, sleek design, and 5-star energy rating. Features include Wi-Fi connectivity, 100% copper condenser, auto-clean technology, and 1.5-ton capacity.",
+    "category": "Split AC",
+    "price": 542.17,
+    "ac_ton": 1.5,
+    "image": "https://th.bing.com/th/id/OIP.7GP-w38XhKSPye02P_uItwHaHa?w=172&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+    "ratingAC": {
+      "count": 1200,
+      "rates": 4.5
+    }
+  },
+  {
+    "id": 2,
+    "brand": "Samsung",
+    "description": "Window AC with smart inverter technology for optimal energy savings. Features include 2-step filtration, fast cooling, low noise operation, and 1-ton capacity.",
+    "category": "Window AC",
+    "price": 301.20,
+    "ac_ton": 1.0,
+    "image": "https://th.bing.com/th/id/OIP.yZOVivCHNRs_ZuGWF8H3tQHaF6?w=183&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+    "ratingAC": {
+      "count": 850,
+      "rates": 4.2
+    }
+  },
+  {
+    "id": 3,
+    "brand": "Voltas",
+    "description": "Split AC with 5-star rating for high cooling efficiency and low energy consumption. Includes anti-dust filter, low noise design, energy-saving mode, and 1.5-ton capacity.",
+    "category": "Split AC",
+    "price": 445.78,
+    "ac_ton": 1.5,
+    "image": "https://th.bing.com/th/id/OIP.pP-Ke5JOYfm61GgvTvT8VAHaCs?w=341&h=127&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+    "ratingAC": {
+      "count": 900,
+      "rates": 4.4
+    }
+  },
+  {
+    "id": 4,
+    "brand": "Daikin",
+    "description": "Split AC with premium features like smart control, energy-saving mode, wide-angle cooling feature for more even airflow distribution, and 1.8-ton capacity.",
+    "category": "Split AC",
+    "price": 590.36,
+    "ac_ton": 1.8,
+    "image": "https://th.bing.com/th/id/OIP.Fa3fPYHPOSZHD4mk101gRQHaHa?w=170&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+    "ratingAC": {
+      "count": 1100,
+      "rates": 4.7
+    }
+  },
+  {
+    "id": 5,
+    "brand": "Blue Star",
+    "description": "Energy-efficient window AC with high cooling capacity, quiet performance, dust filter, eco-friendly refrigerant, and 1-ton capacity.",
+    "category": "Window AC",
+    "price": 253.01,
+    "ac_ton": 1.0,
+    "image": "https://th.bing.com/th/id/OIP.jSSdIp87Nm9MGrmPhDjVHwHaE8?w=300&h=200&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+    "ratingAC": {
+      "count": 650,
+      "rates": 4.0
+    }
+  },
+  {
+    "id": 6,
+    "brand": "Hitachi",
+    "description": "Split AC with inverter technology, eco-friendly refrigerant for efficient cooling, auto climate technology, low noise operation, smart diagnosis, and 1.5-ton capacity.",
+    "category": "Split AC",
+    "price": 494.11,
+    "ac_ton": 1.5,
+    "image": "https://th.bing.com/th/id/OIP.rBum8N2jgucWlw23Uy3QRgHaFw?w=198&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+    "ratingAC": {
+      "count": 700,
+      "rates": 4.3
+    }
+  },
+  {
+    "id": 7,
+    "brand": "Godrej",
+    "description": "Window AC with anti-bacterial filters for fresh and healthy air. Features include a 4-star energy rating, silent operation, smart sleep mode, and 1-ton capacity.",
+    "category": "Window AC",
+    "price": 223.52,
+    "ac_ton": 1.0,
+    "image": "https://th.bing.com/th/id/OIP.IhgTUBAjvMC7FyM3AYrdlQAAAA?w=176&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+    "ratingAC": {
+      "count": 400,
+      "rates": 3.9
+    }
+  }
+]

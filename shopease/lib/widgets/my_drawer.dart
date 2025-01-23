@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopease/main.dart';
-import 'package:shopease/methods/toast_message.dart';
+
+import '../methods_and_ui/toast_message.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -37,9 +38,9 @@ class MyDrawerState extends State<MyDrawer> {
   Widget build(BuildContext context) {
     final width=MediaQuery.of(context).size.width;
     final height=MediaQuery.of(context).size.height;
+
     return Drawer(
       width: width/1.3,
-
       child: FutureBuilder(
         future: getSavedUserInfo(),
         builder: (context,snapshot){
@@ -54,47 +55,15 @@ class MyDrawerState extends State<MyDrawer> {
               children: [
 
 
-                UserAccountsDrawerHeader(
-                  currentAccountPicture: const CircleAvatar(
-                      backgroundImage: AssetImage("assets/images/pic.jpg",)),
-                  accountName: Text(snapshot.data!["savedName"]??"Not Saved"),
-                  accountEmail:Text(snapshot.data!["savedEmail"]??"Not Saved\n ${snapshot.data!["savedPass"]??"Not Saved"}"),
-                ),
 
 
-                ListTile(
-                  leading: MyApp.notifier.value == ThemeMode.light?const Icon(Icons.sunny): const Icon(Icons.dark_mode),
-                  title: MyApp.notifier.value == ThemeMode.light?const Text("Light Theme"): const Text("Dark Theme"),
-                  onTap: (){
-                      MyApp.notifier.value = MyApp.notifier.value == ThemeMode.light ? ThemeMode.dark: ThemeMode.light;
-                      Navigator.pop(context);
-                  },
-                ),
 
-                ListTile(
-                  leading: const Icon(Icons.lock),
-                  title: const Text("AppLock"),
-                  trailing:  Switch(
-                      value: isAppLockEnabled,
-                      onChanged: (value){
-                        setState(() {
-                          isAppLockEnabled=value;
-                        });
-                      },
-                    ),
-                  ),
+                changeTheme(),
 
-                ListTile(
-                  leading: const Icon(Icons.logout),
-                  title: const Text("Logout"),
-                  onTap: ()async{
-                    await auth.signOut().then((value){
-                      Navigator.pushReplacementNamed(context, "/login");
-                    }).onError((error,stackTrace){
-                      ToastMessage().showToastMsg(error.toString());
-                    });
-                  },
-                ),
+                logoutButton(),
+
+
+
 
               ],
             );
@@ -103,4 +72,31 @@ class MyDrawerState extends State<MyDrawer> {
       ),
     );
   }
+
+  Widget changeTheme(){
+    return ListTile(
+      leading: MyApp.notifier.value == ThemeMode.light?const Icon(Icons.sunny): const Icon(Icons.dark_mode),
+      title: MyApp.notifier.value == ThemeMode.light?const Text("Light Theme"): const Text("Dark Theme"),
+      onTap: (){MyApp.notifier.value = MyApp.notifier.value == ThemeMode.light ? ThemeMode.dark: ThemeMode.light;
+      Navigator.pop(context);
+      },
+    );
+  }
+
+  Widget logoutButton(){
+    return ListTile(
+      leading: const Icon(Icons.logout),
+      title: const Text("Logout"),
+      onTap: ()async{
+        await auth.signOut().then((value){
+          Navigator.pushReplacementNamed(context, "/login");
+        }).onError((error,stackTrace){
+          ToastMessage().showToastMsg(error.toString());
+        });
+      },
+    );
+  }
+
+
+
 }

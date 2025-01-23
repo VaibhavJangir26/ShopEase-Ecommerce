@@ -1,10 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:shopease/view_modal/view_all_product_model.dart';
-import 'package:shopease/models/all_product_model.dart';
+import 'package:shopease/methods_and_ui/category_selection_ui.dart';
+import 'package:shopease/methods_and_ui/trending_products.dart';
+import 'package:shopease/screens/offer_and_deal_of_day_screen.dart';
+import 'package:shopease/methods_and_ui/top_pick_product.dart';
 import 'package:shopease/widgets/my_app_bar.dart';
 import 'package:shopease/widgets/my_drawer.dart';
+import '../methods_and_ui/countdown_timer_for_deal.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,35 +18,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<String> categoriesImage = [
-    "assets/images/electronics.jpg",
-    "assets/images/jewellery.jpg",
-    "assets/images/menClothing.jpg",
-    "assets/images/womenCloth.jpg",
-  ];
 
-  List<String> categoriesName = [
-    "Electronics",
-    "Jewellery",
-    "Men's Clothing",
-    "Women's Clothing",
-  ];
 
   int currentIndex = 0;
-
   List<String> carouselImg = [
     "assets/images/carsuelMenCloth.jpg",
     "assets/images/caruselWomenCloth.jpg",
     "assets/images/carJel.jpg",
   ];
-
-  late Future<List<AllProductModel>> _futureProducts;
-
-  @override
-  void initState() {
-    super.initState();
-    _futureProducts = ViewAllProductModel().fetchAllProductData();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,83 +37,45 @@ class _HomeScreenState extends State<HomeScreen> {
         preferredSize: Size.fromHeight(kToolbarHeight),
         child: MyAppBar(title: "ShopEase"),
       ),
+
       drawer: const MyDrawer(),
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Carousel Slider
-              carouselSlider(width),
 
-              // Horizontal Categories List
-              selectCategory(width,height),
+              // carousel slider
+              carouselSlider(width,height),
 
-              // FutureBuilder for Product Data
-              FutureBuilder<List<AllProductModel>>(
-                future: _futureProducts,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          "Error: ${snapshot.error}",
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      ),
-                    );
-                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                    return ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        final product = snapshot.data![index];
-                        return ListTile(
-                          leading: product.image != null && product.image!.isNotEmpty
-                              ? Image.network(
-                            product.image!,
-                            height: 50,
-                            width: 50,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.broken_image);
-                            },
-                          )
-                              : const Icon(Icons.image_not_supported),
-                          title: Text(product.title ?? "No Title"),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("\$${product.price?.toStringAsFixed(2) ?? 'N/A'}"),
-                              Text("Category: ${product.category ?? 'Unknown'}"),
-                              if (product.rating != null)
-                                Text(
-                                  "Rating: ${product.rating!.rate?.toStringAsFixed(1) ?? 'N/A'} (${product.rating!.count ?? 0} reviews)",
-                                ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  } else {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Text("No products available."),
-                      ),
-                    );
-                  }
-                },
-              ),
+              const CategorySelectionUi(),
+
+
+              offerTitle(width, height, "TRENDING"),
+
+              const TrendingProducts(),
+
+              // Countdown Timer widget
+              InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const OfferAndDealOfDayScreen()));
+                  },
+                  child: const CountdownTimerForDeal()),
+
+              offerTitle(width, height, "TOP PICKS, BEST PRICE"),
+
+              const TopPickProduct(),
+
+
+              SizedBox(height: height*.02,),
+              offerSale1(width, height),
+
+              offerTitle(width, height, "SPONSORED"),
+
+              sponsoredProduct(width, height),
+
+
             ],
           ),
         ),
@@ -138,10 +83,20 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget carouselSlider(final width) {
+  Widget offerTitle(final width,final height,String title){
+    return Container(
+      width: width,
+      height: height*.06,
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      alignment: Alignment.centerLeft,
+      child:  Text(title,style: const TextStyle(fontSize: 18,fontWeight: FontWeight.w500),),
+    );
+  }
+
+  Widget carouselSlider(final width,final height) {
     return SizedBox(
       width: width,
-      height: 200, // Fixed height for the carousel slider
+      height: height*.3,
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
@@ -164,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
               autoPlay: true,
               initialPage: 0,
               enlargeCenterPage: true,
-              onPageChanged: (index, reason) {
+              onPageChanged: (index, _) {
                 setState(() {
                   currentIndex = index;
                 });
@@ -173,9 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           // Dots Indicator
           DotsIndicator(
-            decorator: DotsDecorator(
-              color: Colors.grey,
-              activeColor: Colors.pink.shade400,
+            decorator: const DotsDecorator(color: Colors.grey, activeColor: Colors.blue,
             ),
             dotsCount: carouselImg.length,
             position: currentIndex,
@@ -185,50 +138,56 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget selectCategory(final width,final height){
-    return SizedBox(
-      width: width,
-      height: height * .15,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: categoriesImage.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              width: width * .22,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: width,
-                      height: height,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        image: DecorationImage(
-                          image: AssetImage(categoriesImage[index]),
-                          fit: BoxFit.fill,
-                          filterQuality: FilterQuality.high,
-                        ),
-                      ),
-                    ),
-                  ),
 
-                  Text(
-                    categoriesName[index],
-                    style: const TextStyle(
-                      fontSize: 8,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+  Widget offerSale1(final width,final height){
+    return InkWell(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>const OfferAndDealOfDayScreen()));
+      },
+      child: Container(
+        width: width*.95,
+        height: height*.12,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.blue.shade100,
+        ),
+        child: Image.asset("assets/images/offer.jpg",
+        fit: BoxFit.fill,
+        filterQuality: FilterQuality.medium,
+        ),
+
       ),
     );
   }
+
+
+  Widget sponsoredProduct(final width,final height){
+    List<String> sponsoredImg=[
+      "assets/images/shoes.jpeg",
+      "assets/images/rolex.jpeg"
+    ];
+    return SizedBox(
+      width: width*.95,
+      height: height*.4,
+      child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 1,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8
+          ),
+          scrollDirection: Axis.horizontal,
+          itemCount: 2,
+          itemBuilder: (context,index){
+            return Container(
+              width: width*.15,
+              height: height*.2,
+              color: Colors.blueGrey,
+              child: Image.asset(sponsoredImg[index],filterQuality: FilterQuality.medium,fit: BoxFit.fill,),
+            );
+          }
+      )
+    );
+  }
+
+
 }

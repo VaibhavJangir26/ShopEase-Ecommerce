@@ -1,7 +1,6 @@
-// File: screens/CartScreen.dart
 import 'package:flutter/material.dart';
-import 'package:shopease/view_modal/view_category_modal.dart';
-import 'package:shopease/models/category_model.dart';
+import 'package:shimmer/shimmer.dart';
+
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -11,10 +10,13 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  ViewCategoryModal getCategoryData = ViewCategoryModal();
-
   @override
   Widget build(BuildContext context) {
+
+
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Cart Screen"),
@@ -24,47 +26,54 @@ class _CartScreenState extends State<CartScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Expanded(
-              child: FutureBuilder<List<CategoryModal>>(
-                future: getCategoryData.fetchCategoryData("men's clothing"),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text("Unable to get the data"));
-                  } else if (snapshot.hasData) {
-                    return ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        final categoryItem = snapshot.data![index];
-                        return ListTile(
-                          leading: categoryItem.image.isNotEmpty
-                              ? Image.network(
-                            categoryItem.image,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Icon(Icons.broken_image);
-                            },
-                          )
-                              : Icon(Icons.image_not_supported),
-                          title: Text(categoryItem.title),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("\$${categoryItem.price.toString()}"),
-                              Text("Category: ${categoryItem.category}"),
-                              Text("Rating: ${categoryItem.rating.rate} (${categoryItem.rating.count} reviews)")
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  } else {
-                    return Center(child: Text("Unknown error occurred"));
-                  }
-                },
-              ),
-            ),
+
+
+
           ],
+        ),
+      ),
+    );
+  }
+
+  // Loading Shimmer Effect for Cart Items
+  Widget loadingShimmerEffect(double width, double height) {
+    return SizedBox(
+      width: width,
+      height: height * .9,
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade400,
+        highlightColor: Colors.white,
+        child: ListView.builder(
+          itemCount: 5,
+          itemBuilder: (context, index) {
+            return ListTile(
+              leading: Container(
+                width: width * .25,
+                height: height * .3,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade400,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              title: Container(
+                width: width / 25,
+                height: height * .03,
+                margin: const EdgeInsets.only(bottom: 2.5),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade400,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              subtitle: Container(
+                width: width / 25,
+                height: height * .05,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade400,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
